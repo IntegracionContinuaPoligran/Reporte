@@ -3,28 +3,27 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
-
 import { ClipboardModule } from 'ngx-clipboard';
-import { NgbDate, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AdminLayoutRoutes } from './admin-layout.routing';
-
 import { ComponentsModule } from '../../components/components.module';
+
+//Components
+import { ProyectosComponent } from '../../pages/proyectos/proyectos.component';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild(AdminLayoutRoutes),
-    FormsModule,
     HttpClientModule,
     NgbModule,
-    ClipboardModule,
     ComponentsModule,
-    PdfViewerModule
+    FormsModule,
+    ReactiveFormsModule,
+    ClipboardModule
   ],
   declarations: [
- 
+    ProyectosComponent
   ]
 })
 

@@ -1,7 +1,17 @@
-<app-navbar></app-navbar>
+<!-- Sidenav -->
+<app-sidebar></app-sidebar>
 
-<router-outlet></router-outlet>
+<div class="main-content">
+    <!-- Top navbar -->
+    <app-navbar></app-navbar>
 
-<div class="container">
-    <app-footer></app-footer>
+    
+    <!-- Pages -->
+    <router-outlet></router-outlet>
+
+
+    <div class="container-fluid">
+        <app-footer></app-footer>
+    </div>
+
 </div>

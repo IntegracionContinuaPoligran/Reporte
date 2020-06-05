@@ -1,9 +1,11 @@
 import { Routes, CanActivate } from '@angular/router';
 import { LoginGuard } from '../../guards/login.guard';
 
-export const AdminLayoutRoutes: Routes = [
-   //{ path: 'descarga', component: DescargaDocumentosComponent, canActivate: [LoginGuard], data: { expectedRol: 'Files' }  },
+//Components
+import { ProyectosComponent } from '../../pages/proyectos/proyectos.component';
 
+export const AdminLayoutRoutes: Routes = [
+   { path: 'proyectos', component: ProyectosComponent },
 ];
 
 

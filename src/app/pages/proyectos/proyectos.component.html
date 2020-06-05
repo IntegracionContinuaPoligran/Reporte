@@ -1,0 +1,106 @@
+<!-- Card Components -->
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-6">
+    <div class="container-fluid">
+    </div>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7 animated fadeIn fast">
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">Administración de proyectos</h3>
+                        </div>
+
+                        <div class="col-4 text-right">
+                            <button class="btn btn-sm btn-primary" (click)="agregarNuevoProyecto()">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-8">                           
+                        </div>
+                        <div class="col-4 text-right">
+                            <div class="form-group mb-3">
+                                <div class="input-group input-group-alternative">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                    </div>
+                                    <input class="form-control"
+                                     placeholder="Buscar..."
+                                     type="text"
+                                     name="buscador"
+                                     [(ngModel)]="buscador"
+                                     (ngModelChange)="filtro()">                                 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <div *ngIf="!cargando && !sinData && listProyectos.length > 0">                   
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>                         
+                          <th scope="col">RV</th>                         
+                          <th scope="col">Proyecto</th>
+                          <th scope="col">Responsable</th>
+                          <th scope="col">Vigencia</th>
+                          <th scope="col">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let proyecto of proyectos">
+                          <th scope="row">{{ proyecto.registroVenta}}</th>                         
+                          <td>{{ proyecto.proyecto.substring(0,15)}}...</td>
+                          <td>{{ proyecto?.responsables[0]?.nombre  }}</td>
+                          <td>{{ proyecto.activo == true? 'Activo': 'Inactivo'}}</td>                          
+                          <td>
+                            <button class="btn btn-sm btn-info" (click)="edicionProyecto(proyecto.registroVenta)">
+                                <i class="fa fa-pen"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" (click)="confirmarEliminacion(modalConfirmacion, proyecto.registroVenta)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>
+                      
+                      <div class="d-flex justify-content-between p-2">
+                        <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
+                        </ngb-pagination>                      
+                        <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
+                          <option [ngValue]="2">2 Registros por pagina</option>
+                          <option [ngValue]="4">4 Registros por pagina</option>
+                          <option [ngValue]="10">10 Registros por pagina</option>
+                          <option [ngValue]="50">50 Registros por pagina</option>
+                          <option [ngValue]="100">100 Registros por pagina</option>
+                        </select>
+                      </div>
+                </div>                 
+                <app-alerta-no-data *ngIf="sinData"></app-alerta-no-data>
+                <app-loader  *ngIf="cargando"></app-loader>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<ng-template #modalConfirmacion let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">{{tituloModal}}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <p><strong>{{mensajeModal}}</strong></p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modal.close()">Cerrar</button>
+      <button type="button" class="btn btn-outline-dark" (click)="desabilitarProyecto()">Eliminar</button>
+    </div>
+  </ng-template>

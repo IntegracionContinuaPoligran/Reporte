@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
+//Modelos
 import { LoginModel } from '../../models/login.model';
+
+//Servicios
 import { LoginService } from '../../services/login.service';
 import { SweetService } from '../../services/sweet.service';
+import { MenuService } from 'src/app/services/menu.service';
 
 @Component({
   selector: 'app-login',
@@ -17,27 +22,26 @@ export class LoginComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private loginService: LoginService,
+    private menuService: MenuService,
     private router: Router,
     private alerta: SweetService) { }
 
   ngOnInit() {
+    sessionStorage.clear();
     this.cargarFormulario();
   }
 
-  //#region  Validación de controles
   get userNameNoValido() {
-    return this.formGroup.get('userName').invalid && this.formGroup.get('userName').touched
+    return this.formGroup.get('usuario').invalid && this.formGroup.get('usuario').touched
   }
 
   get passwordNoValido() {
     return this.formGroup.get('password').invalid && this.formGroup.get('password').touched
   }
-  //#endregion
-
 
   cargarFormulario() {
     this.formGroup = this.fb.group({
-      userName: ['', [
+      usuario: ['', [
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(12)
@@ -54,40 +58,48 @@ export class LoginComponent implements OnInit {
   login() {
 
     if (!this.validarFormulario()) return;
-
-    this.alerta.mostrarAlerta('info', 'Estamos validando su información', true);
-
+    this.alerta.mostrarAlerta('info', 'Iniciando sesión', true);
     this.loginModel = this.formGroup.value;
-    
+
     this.loginService.login(this.loginModel)
-      .subscribe(resp => {
-        this.alerta.cerrarAlerta();
-        this.router.navigateByUrl(resp);
-      }, (error) => {
-        if (error?.status === 401) {
-          this.router.navigateByUrl('/login');
-          this.alerta.cerrarAlerta();
-        } else {
-          console.log(error);
-          this.alerta.mostrarAlerta('error', 'Los datos ingresados no son correctos. Por favor verifíquelos e intente nuevamente.', false);
-        }
-      });
+      .subscribe(resp => this.obtenerMenu(resp),
+        (error) => {
+          this.alerta.mostrarAlerta('error', 'La credenciales son incorrectas.', false);
+        });
   }
 
-
   validarFormulario(): boolean {
-
     if (this.formGroup.invalid) {
       Object.values(this.formGroup.controls).forEach(control => {
         control.markAsTouched();
       });
-
       return false;
     }
-
     return true;
+  }
+
+  obtenerMenu(resp) {
+    if (resp.estado) {
+      if (this.menuUsuario()) {
+        this.router.navigateByUrl('/proyectos');
+      } else {
+        this.router.navigateByUrl('/login');
+      }
+
+      this.alerta.cerrarAlerta();
+    }
+  }
+
+  async menuUsuario() {
+    await this.menuService.menuUsuario()
+      .subscribe(resp => {
+        return true;
+      }, (error) => {
+        return false;
+      });
 
   }
+
 
 
 }

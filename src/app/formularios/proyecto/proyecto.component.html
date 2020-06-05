@@ -1,0 +1,271 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ titulo }}</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <div class="card-body">
+    <form [formGroup]="formGroup">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="form-group mb-3">
+            <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="ni ni-app"></i></span>
+                </div>
+                <input class="form-control"
+                 placeholder="Registro de Venta"
+                 type="text"
+                 name="registroVenta"
+                 formControlName="registroVenta">                                 
+            </div>                      
+            <small class="control-error" >{{ getError('registroVenta')}}</small>
+        </div>          
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group mb-3">
+            <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="ni ni-archive-2"></i></span>
+                </div>
+                <input class="form-control"
+                 placeholder="Nombre del proyecto"
+                 type="text"
+                 name="proyecto"
+                 formControlName="proyecto">                                 
+            </div>            
+            <small class="control-error" >{{ getError('proyecto')}}</small>
+        </div>                   
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="form-group mb-3">                    
+            <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="ni ni-circle-08"></i></span>
+                </div>
+                <select class="form-control"
+                  name="responsable1"
+                  formControlName="responsable1">
+                  <option value="0">Responsable Principal</option>
+                  <option [value]=item.valor *ngFor="let item of responsables">{{item.variable}}</option>
+                </select>                               
+            </div>            
+            <small class="control-error" >{{ getError('responsable1')}}</small>
+        </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group mb-3">                     
+            <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="ni ni-circle-08"></i></span>
+                </div>
+                <select class="form-control"
+                  name="responsable2"
+                  formControlName="responsable2">
+                  <option value="0">Responsable Secundario</option>
+                  <option [value]=item.valor *ngFor="let item of responsables">{{item.variable}}</option>
+                </select>                               
+            </div>            
+            <small class="control-error" >{{ getError('responsable2')}}</small>
+          </div> 
+        </div>
+      </div>
+      <p>
+        <button type="button" class="btn btn-link" (click)="isCollapsed = !isCollapsed"
+                [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+           {{labelOpcionAvanzada}}
+        </button>
+      </p>
+      <div id="collapseExample" [ngbCollapse]="isCollapsed">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group mb-3">
+                  <div class="input-group input-group-alternative">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-single-02"></i></span>
+                      </div>
+                      <input class="form-control"
+                       placeholder="Nombre del cliente"
+                       type="text"
+                       name="cliente"
+                       formControlName="cliente">                                 
+                  </div>            
+                  <small class="control-error" >{{ getError('cliente')}}</small>
+              </div> 
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group mb-3">
+                  <div class="input-group input-group-alternative">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-archive-2"></i></span>
+                      </div>
+                      <input class="form-control"
+                       placeholder="Descripcion del proyecto"
+                       type="text"
+                       name="descripcion"
+                       formControlName="descripcion">                                 
+                  </div>            
+                  <small class="control-error" >{{ getError('descripcion')}}</small>
+              </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label class="form-control-label" for="input-username">Fecha Inicio</label>
+                  <div class="input-group">
+                    <input class="form-control"
+                     placeholder="yyyy-mm-dd"                
+                      ngbDatepicker #fi="ngbDatepicker"
+                      name="fechaInicio"
+                      formControlName="fechaInicio">
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary" (click)="fi.toggle()" type="button"
+                      style="color: #8898aa; border: 1px solid #cad1d7;">
+                        <i class="ni ni-calendar-grid-58"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <small class="control-error" >{{ getError('fechaInicio')}}</small>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label class="form-control-label" for="input-username">Fecha Fin</label>
+                  <div class="input-group">
+                    <input class="form-control"
+                     placeholder="yyyy-mm-dd"                
+                      ngbDatepicker #ff="ngbDatepicker"
+                      name="fechaFin"
+                      formControlName="fechaFin">
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary" (click)="ff.toggle()" type="button"
+                      style="color: #8898aa; border: 1px solid #cad1d7;">
+                        <i class="ni ni-calendar-grid-58"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <small class="control-error" >{{ getError('fechaFin')}}</small>
+                </div>         
+              </div>        
+            </div>            
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="form-group mb-3">                     
+                  <div class="input-group input-group-alternative">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-box-2"></i></span>
+                      </div>
+                      <select class="form-control"
+                        name="clasificacion1"
+                        formControlName="clasificacion1">
+                        <option value="0">Clasificacion 1</option>
+                        <option [value]=item.valor *ngFor="let item of clasificacion1">{{item.variable}}</option>
+                      </select>                               
+                  </div>            
+                  <small class="control-error" >{{ getError('clasificacion1')}}</small>
+              </div>          
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group mb-3">                     
+                  <div class="input-group input-group-alternative">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-box-2"></i></span>
+                      </div>
+                      <select class="form-control"
+                        name="clasificacion2"
+                        formControlName="clasificacion2">
+                        <option value="0">Clasificacion 2</option>
+                        <option [value]=item.valor *ngFor="let item of clasificacion2">{{item.variable}}</option>
+                      </select>                               
+                  </div>            
+                  <small class="control-error" >{{ getError('clasificacion2')}}</small>
+              </div>
+              </div>  
+              <div class="col-lg-4">
+                <div class="form-group mb-3">                     
+                  <div class="input-group input-group-alternative">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-box-2"></i></span>
+                      </div>
+                      <select class="form-control"
+                        name="clasificacion3"
+                        formControlName="clasificacion3">
+                        <option value="0">Clasificacion 3</option>
+                        <option [value]=item.valor *ngFor="let item of clasificacion3">{{item.variable}}</option>
+                      </select>                               
+                  </div>            
+                  <small class="control-error" >{{ getError('clasificacion3')}}</small>
+              </div>
+              </div>          
+            </div>
+            <div class="row">
+              <div class="col-lg-2"></div>
+              <div class="col-lg-2">
+                <div class="form-group" *ngIf="edicion">
+                  <input class="custom-control-input" 
+                    id=" customCheckActivo"
+                    type="checkbox"
+                    name="activo"
+                    formControlName="activo">
+                  <label class="custom-control-label" for=" customCheckActivo">
+                    <span class="text-muted">Activo</span>
+                  </label>
+                </div>
+              </div>
+              <div class="col-lg-2">         
+                <div class="form-group">
+                  <input class="custom-control-input" 
+                    id=" customCheckIngreso"
+                    type="checkbox"
+                    name="ingreso"
+                    formControlName="ingreso">
+                  <label class="custom-control-label" for=" customCheckIngreso">
+                    <span class="text-muted">Ingreso</span>
+                  </label>
+                </div>
+              </div>
+              <div class="col-lg-2">
+                <div class="form-group">
+                  <input class="custom-control-input"
+                   id=" customCheckGasto"
+                    type="checkbox"
+                    name="gasto"
+                    formControlName="gasto">
+                  <label class="custom-control-label" for=" customCheckGasto">
+                    <span class="text-muted">Gasto</span>
+                  </label>
+                </div>
+              </div>
+              <div class="col-lg-2">
+                <div class="form-group">
+                  <input class="custom-control-input"
+                   id=" customCheckCosto"
+                   type="checkbox"
+                   name="costo"
+                    formControlName="costo">
+                  <label class="custom-control-label" for=" customCheckCosto">
+                    <span class="text-muted">Costo</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> 
+    </form>
+    <ngb-alert *ngIf="alerta" role="alert" class="alert alert-danger alert-dismissible">
+      <font style="vertical-align: inherit;">
+      <font style="vertical-align: inherit;">{{mensajeAlerta}}}</font></font>
+    </ngb-alert>
+  </div>  
+  <div class="modal-footer">    
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close()">Cerrar</button>
+    <button type="button" class="btn btn-primary my-4" (click)="guardar()" [disabled]="formGroup.invalid">Guardar</button>
+  </div>
