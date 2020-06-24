@@ -1,0 +1,144 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{ titulo }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="card-body">
+        <form [formGroup]="formGroup">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group mb-3">
+                        <div class="input-group input-group-alternative">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="ni ni-circle-08"></i></span>
+                            </div>
+                            <select class="form-control" name="idUsuario" formControlName="idUsuario">
+                                <option value="0">Seleccione el usuario</option>
+                                <option [value]=item.idUsuario *ngFor="let item of listParametros2">{{item.nombre}}</option>
+                            </select>
+                        </div>
+                        <small class="control-error">{{ getError('idUsuario')}}</small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="form-control-label" for="input-username">Fecha Inicio</label>
+                        <div class="input-group">
+                            <input class="form-control" placeholder="yyyy-mm-dd" ngbDatepicker #fi="ngbDatepicker"
+                                name="fechaInicio" formControlName="fechaInicio">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" (click)="fi.toggle()" type="button"
+                                    style="color: #8898aa; border: 1px solid #cad1d7;">
+                                    <i class="ni ni-calendar-grid-58"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <small class="control-error">{{ getError('fechaInicio')}}</small>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="form-control-label" for="input-username">Fecha Fin</label>
+                        <div class="input-group">
+                            <input class="form-control" placeholder="yyyy-mm-dd" ngbDatepicker #ff="ngbDatepicker"
+                                name="fechaFin" formControlName="fechaFin">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" (click)="ff.toggle()" type="button"
+                                    style="color: #8898aa; border: 1px solid #cad1d7;">
+                                    <i class="ni ni-calendar-grid-58"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <small class="control-error">{{ getError('fechaFin')}}</small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <button class="btn btn-sm btn-info" style="margin-bottom: 1%;" (click)="agregarPorcentaje()">
+                        <i class="ni ni-fat-add"></i>
+                        <span>Adicionar</span>
+                    </button>
+                    <div style="overflow: auto; height: 200px;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Proyecto</th>
+                                <th scope="col">Porcentaje</th>
+                                <th scope="col">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody formArrayName="porcentajes">
+                            <tr *ngFor="let item of porcentajes?.controls; let i = index" [formGroupName]="i">
+                                <td>
+                                    {{ i + 1 }}
+                                </td>
+                                <td>
+                                    <div class="input-group input-group-alternative">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="ni ni-folder-17"></i></span>
+                                        </div>
+                                        <select class="form-control" name="proyecto" formControlName="proyecto">
+                                            <option value="0">Seleccione el proyecto</option>
+                                            <option [value]=item.registroVenta *ngFor="let item of listParametros1">{{item.registroVenta}}</option>
+                                        </select>
+                                    </div>
+                                                                     
+                                </td>
+                                <td>
+                                    <div class="input-group input-group-alternative">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="ni ni-bold-right"></i></span>
+                                        </div>
+                                        <input class="form-control"                                         
+                                         type="text"
+                                         name="valor"
+                                         formControlName="valor">                                 
+                                    </div>
+                                   
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-danger"
+                                        (click)="borrarPorcentaje(i)">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+
+                <!-- <button (click)="agregarPorcentaje()">Add</button>
+                <div formArrayName="porcentajes" *ngFor="let creds of porcentajes.controls; let i = index">
+                    <div [formGroupName]="i">
+
+                        <input placeholder="id" formControlName="proyecto">
+                        <input placeholder="pasatiempo" formControlName="valor">
+
+                    </div>
+                </div> -->
+            </div>
+            <h3>Porcentaje configurado <strong >{{porcentajeConfigurado}}%</strong></h3>
+        </form>
+        <div *ngIf="alerta" class="alert alert-danger" role="alert">
+            {{mensajeAlerta}}          
+        </div>
+
+        <div *ngIf="alertaPorcentaje" class="alert alert-danger" role="alert">
+            {{mensajeAlerta1}}
+            <br>
+            {{mensajeAlerta2}}
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="activeModal.close()">Cerrar</button>
+        <button type="button" class="btn btn-primary my-4" (click)="guardar()" [disabled]="formGroup.invalid">Guardar</button>
+    </div>
