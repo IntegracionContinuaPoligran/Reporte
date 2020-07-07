@@ -9,6 +9,8 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { ProyectoComponent } from '../formularios/proyecto/proyecto.component';
 import { AutomaticoComponent } from './automatico/automatico.component';
 import { RegistroHorasComponent } from './registro-horas/registro-horas.component';
+import { RolComponent } from './rol/rol.component';
+
 
 
 @NgModule({
@@ -23,7 +25,8 @@ import { RegistroHorasComponent } from './registro-horas/registro-horas.componen
   declarations: [
     ProyectoComponent,
     AutomaticoComponent,
-    RegistroHorasComponent
+    RegistroHorasComponent,
+    RolComponent,    
   ],
   exports: [
     ProyectoComponent,

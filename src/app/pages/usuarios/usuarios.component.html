@@ -1,0 +1,138 @@
+<!-- Card Components -->
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-6">
+    <div class="container-fluid">
+    </div>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7 animated fadeIn fast">
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">{{titulopagina}}</h3>
+                        </div>
+                        <div class="col-4 text-right">                            
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-8">                           
+                        </div>
+                        <div class="col-4 text-right">
+                            <div class="form-group mb-3">
+                                <div class="input-group input-group-alternative">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                    </div>
+                                    <input class="form-control"
+                                     placeholder="Buscar..."
+                                     type="text"
+                                     name="buscador"
+                                     [(ngModel)]="buscador"
+                                     (ngModelChange)="filtro()">                                 
+                                </div>
+                            </div>
+                        </div>
+                    </div>                   
+                   
+                    <div class="table-responsive" *ngIf="listDataTable.length > 0">
+                        
+
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Nombre</th>                                    
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Jefe nmediatro</th>
+                                    <th scope="col">Proyecto Base</th>
+                                    <th scope="col">Accion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let registroFila of listDataTable">
+                                    <th scope="row">
+                                        {{registroFila.nombre}}
+                                    </th>                                    
+                                    <td>
+                                        {{registroFila.email}}
+                                    </td>
+                                    <td>
+                                        {{registroFila.jefeInmediato}}
+                                    </td>
+                                    <td>
+                                        {{registroFila.proyectoBase}}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-info" data-toggle="tooltip" data-placement="top" title="Editar Proyecto base" (click)="EditarUsuario(modalConfirmacion, registroFila.idUsuario, registroFila.nombre)">
+                                            <i class="ni ni-archive-2"></i>
+                                        </button>  
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-between p-2">
+                            <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
+                            </ngb-pagination>
+     
+                            <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
+                              <option [ngValue]="2">2 Registros por pagina</option>
+                              <option [ngValue]="4">4 Registros por pagina</option>
+                              <option [ngValue]="10">10 Registros por pagina</option>
+                              <option [ngValue]="50">50 Registros por pagina</option>
+                              <option [ngValue]="100">100 Registros por pagina</option>
+                            </select>
+                        </div>
+                    </div> 
+                    <app-alerta-no-data *ngIf="sinData"></app-alerta-no-data>
+                    <app-loader  *ngIf="cargando"></app-loader>                   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<ng-template #modalConfirmacion let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">{{tituloModal}}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="row">
+                <div class="col-lg-5">
+                   <strong>{{modalUsuario}}</strong> 
+                </div>
+                <div class="col-lg-7">
+                    <div class="form-group mb-3">                                   
+                        <div class="input-group input-group-alternative">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="ni ni-circle-08"></i></span>
+                            </div>
+                            <select 
+                                class="form-control"
+                                 name="idUsuario"
+                                 id.id="searchEstado"
+                                 [(ngModel)]="Modelo.registroVenta">
+                                <option value="0">Seleccione Proyecto</option>
+                                <option [value]=item.registroVenta *ngFor="let item of listProyectos">{{item.registroVenta}} {{item.proyecto}} </option>
+                            </select>
+                        </div>                                   
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div *ngIf="modalError" class="alert alert-danger" role="alert">
+           {{mensajeModal}}
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modal.close()">Cerrar</button>
+      <button type="button" class="btn btn-outline-dark" (click)="guardarRegistro(modalConfirmacion)">Guardar</button>
+    </div>
+  </ng-template>

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TokenStorageService } from './token-storage.service';
 import { map } from 'rxjs/operators';
+import { MenuModel } from '../models/menu.model';
 import { Router } from '@angular/router';
 import { registroModel } from '../models/registro.model';
 
@@ -19,21 +20,12 @@ export class MenuService {
     private router: Router) { }
 
 
-  menuUsuario() {
+  obtenerMenu() {
     const metodo = 'ObtenerMenu';
     const parametrosSesion = this.obtenerParametros();
     const re = new registroModel();
     re.parametro1 = parametrosSesion.usuario;
-    return this.EnvioPeticion(metodo, re)
-    .pipe(
-      map((resp) => {
-        if (resp.estado) {
-          const menu = typeof (resp.mensaje1) === 'object' ? resp.mensaje1 : JSON.parse(resp.mensaje1);
-          this.tokenStorage.guardarMenu(menu);
-          return true;
-        }
-      })
-    )
+    return this.EnvioPeticion(metodo, re);     
   }
 
   obtenerNombreUsuario() {
@@ -65,10 +57,10 @@ export class MenuService {
        token === '' || token == null || token === undefined? this.router.navigateByUrl('/login') :
        this.headers.Authorization =  'Bearer ' + token;
       });
+
   }
 
   obtenerParametros() {
      return this.tokenStorage.ObtenerParametros();
   }
-
 }

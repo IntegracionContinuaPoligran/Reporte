@@ -1,9 +1,14 @@
 
+
+
+
   declare interface IPaginas {
+    idRol: number;
     rol: string;
     icon: string;
     isCollapsed: boolean;
     paginas: IRouteInfo[];
+    activo: boolean;
   }
 
 declare interface IRouteInfo {
@@ -15,11 +20,11 @@ declare interface IRouteInfo {
 
 
   export class MenuModel implements IPaginas {
-
+      idRol: number;
       rol: string;
       icon: string;
       isCollapsed: boolean;
       paginas: IRouteInfo[];
-
+      activo: boolean;
   }
 

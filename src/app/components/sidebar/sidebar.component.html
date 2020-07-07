@@ -1,14 +1,10 @@
 <nav class="navbar navbar-vertical navbar-expand-md navbar-light bg-white" id="sidenav-main">
     <div class="container-fluid">
         <!-- Toggler -->
-        <button class="navbar-toggler" type="button" (click)="isCollapsed=!isCollapsed"
-            aria-controls="sidenav-collapse-main">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <button class="navbar-toggler" type="button" (click)="isCollapsed=!isCollapsed" aria-controls="sidenav-collapse-main">
+      <span class="navbar-toggler-icon"></span>
+    </button>
         <!-- Brand -->
-        <a class="navbar-brand pt-0" routerLinkActive="active" [routerLink]="['/proyectos']">
-            <!-- <img src="./assets/img/brand/logo_olimpia.svg" width="70%" sclass="navbar-brand-img" alt="..."> -->
-        </a>
 
         <!-- User -->
         <ul class="nav align-items-center d-md-none">
@@ -27,8 +23,8 @@
                 <a class="nav-link" role="button" ngbDropdownToggle>
                     <div class="media align-items-center">
                         <span class="avatar avatar-sm rounded-circle">
-                            <img alt="Image placeholder" src="./assets/img/theme/team-1-800x800.jpg">
-                        </span>
+              <img alt="Image placeholder" src="./assets/img/theme/team-1-800x800.jpg">
+            </span>
                     </div>
                 </a>
                 <div class="dropdown-menu-arrow dropdown-menu-right" ngbDropdownMenu>
@@ -68,29 +64,29 @@
             <div class="navbar-collapse-header d-md-none">
                 <div class="row">
                     <div class="col-6 collapse-brand">
-                        <a routerLinkActive="active" [routerLink]="['/proyectos']">
+                        <a routerLinkActive="active" [routerLink]="['/dashboard']">
                             <img src="./assets/img/brand/blue.png">
                         </a>
                     </div>
                     <div class="col-6 collapse-close">
                         <button type="button" class="navbar-toggler" (click)="isCollapsed=!isCollapsed">
-                            <span></span>
-                            <span></span>
-                        </button>
+              <span></span>
+              <span></span>
+            </button>
                     </div>
                 </div>
             </div>
 
+
+
             <ul class="navbar-nav">
                 <li *ngFor="let item of menuItems" class="nav-item">
-                    <a class="nav-link" (click)="sideBarCollapse( item.rol )" [attr.aria-expanded]="!item.isCollapsed"
-                        [attr.aria-controls]="item.rol">
+                    <a class="nav-link" (click)="sideBarCollapse( item.rol )" [attr.aria-expanded]="!item.isCollapsed" [attr.aria-controls]="item.rol">
                         <i class="{{ item.icon }}"></i> {{ item.rol }}
                     </a>
                     <ul class="nav " [id]="item.rol" [ngbCollapse]="item.isCollapsed">
                         <li class="nav-item" *ngFor="let paginas of item.paginas">
-                            <a class="nav-link animated fadeInDown fast" routerLinkActive="active"
-                                [routerLink]="[paginas.path]">
+                            <a class="nav-link animated fadeInDown fast" routerLinkActive="active" [routerLink]="[paginas.path]">
                                 <i class="{{ paginas.icon }}"></i> {{ paginas.title }}
                             </a>
                         </li>
@@ -101,19 +97,6 @@
             <!-- Divider -->
             <hr class="my-3">
 
-            <h6 class="navbar-heading text-muted">Documentación</h6>
-            <ul class="navbar-nav mb-md-3">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="ni ni-books"></i>Manual de Usuario
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="ni ni-books"></i> Listado de proyectos
-                    </a>
-                </li>
-            </ul>
         </div>
     </div>
 </nav>

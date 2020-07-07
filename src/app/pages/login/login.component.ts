@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LoginModel } from 'src/app/models/login.model';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
-//Modelos
-import { LoginModel } from '../../models/login.model';
-
-//Servicios
-import { LoginService } from '../../services/login.service';
-import { SweetService } from '../../services/sweet.service';
+import { LoginService } from 'src/app/services/login.service';
 import { MenuService } from 'src/app/services/menu.service';
+import { promise, error } from 'protractor';
+import { TokenStorageService } from 'src/app/services/token-storage.service';
+import { rejects } from 'assert';
 
 @Component({
   selector: 'app-login',
@@ -16,90 +14,115 @@ import { MenuService } from 'src/app/services/menu.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-
-  private formGroup: FormGroup;
   loginModel: LoginModel = new LoginModel();
+  recordarme: boolean;
+  formGroup: FormGroup;
+  alerta : boolean;
+  carga: boolean = false;
+  mensajealerta: string;
 
-  constructor(private fb: FormBuilder,
-    private loginService: LoginService,
+  constructor(
+    private loginSerivce: LoginService,
     private menuService: MenuService,
-    private router: Router,
-    private alerta: SweetService) { }
+    private token: TokenStorageService,
+    private fb: FormBuilder,
+    private menuServicio: MenuService,
+    private router: Router) { }
 
   ngOnInit() {
     sessionStorage.clear();
-    this.cargarFormulario();
+    this.crearFormulario();
   }
 
-  get userNameNoValido() {
-    return this.formGroup.get('usuario').invalid && this.formGroup.get('usuario').touched
+  get usuarioNoValido() {
+    return this.formGroup.get('usuario').invalid && this.formGroup.get('usuario').touched;
   }
 
-  get passwordNoValido() {
-    return this.formGroup.get('password').invalid && this.formGroup.get('password').touched
-  }
-
-  cargarFormulario() {
+  crearFormulario() {
     this.formGroup = this.fb.group({
-      usuario: ['', [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(12)
-      ]],
-      password: ['', [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(12)
-      ]]
+      usuario: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
+      password: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]]
     });
   }
 
-
   login() {
 
-    if (!this.validarFormulario()) return;
-    this.alerta.mostrarAlerta('info', 'Iniciando sesión', true);
-    this.loginModel = this.formGroup.value;
-
-    this.loginService.login(this.loginModel)
-      .subscribe(resp => this.obtenerMenu(resp),
-        (error) => {
-          this.alerta.mostrarAlerta('error', 'La credenciales son incorrectas.', false);
-        });
-  }
-
-  validarFormulario(): boolean {
     if (this.formGroup.invalid) {
-      Object.values(this.formGroup.controls).forEach(control => {
-        control.markAsTouched();
-      });
-      return false;
+      return;
     }
-    return true;
-  }
-
-  obtenerMenu(resp) {
-    if (resp.estado) {
-      if (this.menuUsuario()) {
-        this.router.navigateByUrl('/proyectos');
-      } else {
-        this.router.navigateByUrl('/login');
-      }
-
-      this.alerta.cerrarAlerta();
-    }
-  }
-
-  async menuUsuario() {
-    await this.menuService.menuUsuario()
+    this. alerta= false;
+    this.carga= true;   
+    this.loginModel = this.formGroup.value;
+    this.loginSerivce.login(this.loginModel)
       .subscribe(resp => {
-        return true;
-      }, (error) => {
-        return false;
-      });
+        if(resp.estado) {
+          this.menuUsuario()
+          .then(resp => {
+            if(resp === true){
+              this.router.navigateByUrl('/proyectos');
+            } else {    
+              this.router.navigateByUrl('/login');        
+            console.log(resp);
+            }
+          })
+        }
+       else {
+        this.alerta= true;
+        this.mensajealerta= resp.mensaje1;
+        }
+        this.carga= false;
+      
+    }, (err) => {
+      this.alerta= true;
+      this.carga= false;
+      this.mensajealerta='Se presentó un problema al  validar las credenciales';
+    });
 
+  }  
+
+  getError(controlName: string): string {
+    let error = '';
+    const control = this.formGroup.get(controlName);
+    if (control.touched && control.errors != null) {
+      error = JSON.stringify(control.errors);
+    }
+    error = this.formatearError (error);
+    return error;
   }
 
+  formatearError(objeto: string): string {
+    if (objeto === '') {
+      return objeto;
+    }
+    const obj = JSON.parse(objeto);
+    let mensaje = '';
 
+    if (obj.minlength) {
+      mensaje = 'La longitud mínima de caracteres es de : ' + obj.minlength.requiredLength;
+    }
+    if (obj.maxlength) {
+      mensaje = 'Supero el límite de caracteres permitidos de: ' + obj.maxlength.requiredLength;
+    }
+    if (obj.required) {
+      mensaje = 'El campo es requerido';
+    }
+  return mensaje;
+  }
+
+  menuUsuario() {
+   return new Promise((resolve,reject) => {
+      this.menuService.obtenerMenu()
+      .subscribe(resp => {
+        if(resp.estado === true) {
+        const menu = typeof(resp.mensaje1) === 'object' ?  resp.mensaje1 : JSON.parse(resp.mensaje1);
+        this.token.guardarMenu(menu);
+        resolve (true);
+      }
+    },(error) =>{
+      reject(error);
+      console.log(error);
+    });
+    });
+  }  
 
 }

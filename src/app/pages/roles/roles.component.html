@@ -1,0 +1,163 @@
+<!-- Card Components -->
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-6">
+    <div class="container-fluid">
+    </div>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">{{titulopagina}}</h3>
+                        </div>
+                        <div class="col-4 text-right">
+                            <button class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top"
+                                title="Nuevo registro" (click)="nuevoRegistro()">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-8 text-left">
+                            <!-- <div class="text-center animated fadeIn faster mensajesAlerta" *ngIf="generandoArchivo">
+                                <p><i class="fas fa-spinner fa-pulse fa-2x"></i>
+                                <p class="mb-0">
+                                    Generando Archivo
+                                </p>
+                            </div>
+                            <button type="button" *ngIf="!generandoArchivo" class="btn btn-success btn-circle"
+                                data-toggle="tooltip" data-placement="top" title="Generar Excel"
+                                (click)="generarExcel()">
+                                <i class="fa fa-file-excel"></i>
+                            </button> -->
+                        </div>
+                        <div class="col-4 text-right">
+                            <div class="form-group mb-3">
+                                <div class="input-group input-group-alternative">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                    </div>
+                                    <input class="form-control" placeholder="Buscar..." type="text" name="buscador"
+                                        [(ngModel)]="buscador" (ngModelChange)="filtro()">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive" *ngIf="listDataTable.length > 0">
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Rol</th>
+                                    <th scope="col">Icono</th>
+                                    <th scope="col"># Paginas</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let registroFila of listDataTable">
+                                    <th scope="row">
+                                        {{registroFila.rol}}
+                                    </th>
+                                    <td>                                       
+                                        <div _ngcontent-c6="">
+                                            <i _ngcontent-c6="" class="{{registroFila.icon}}"></i>
+                                            <span _ngcontent-c6="" style="margin-left: 16px;">{{registroFila.icon}}</span>
+                                        </div>
+                                        
+                                    </td>
+                                    <td>
+                                        {{registroFila.paginas.length}}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-info" data-toggle="tooltip" data-placement="top"
+                                            title="Editar registro" (click)="edicionRegistro(registroFila.idRol)">
+                                            <i class="fa fa-pen"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top"
+                                            title="Eliminar registro"
+                                            (click)="confirmarEliminacion(modalConfirmacion, registroFila.idRol)">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-between p-2">
+                            <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
+                            </ngb-pagination>
+                            <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
+                                <option [ngValue]="2">2 Registros por pagina</option>
+                                <option [ngValue]="4">4 Registros por pagina</option>
+                                <option [ngValue]="10">10 Registros por pagina</option>
+                                <option [ngValue]="50">50 Registros por pagina</option>
+                                <option [ngValue]="100">100 Registros por pagina</option>
+                            </select>
+                        </div>
+                    </div>
+                    <app-alerta-no-data *ngIf="sinData"></app-alerta-no-data>
+                    <app-loader *ngIf="cargando"></app-loader>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<ng-template #modalConfirmacion let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{tituloModal}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p><strong>{{mensajeModal}}</strong></p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modal.close()">Cerrar</button>
+        <button type="button" class="btn btn-outline-dark" (click)="eliminarRegistro()">Eliminar</button>
+    </div>
+</ng-template>
+<!-- card -->
+<div role="alert" id="notifiCorrecta" aria-live="assertive" aria-atomic="true" class="toast">
+    <div class="toast-header">
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Cerrar" (click)="cerrarToast()">
+            <span aria-hidden="true"></span>
+        </button>
+        <div class="row">
+            <div class="col-lg-1">
+                <div _ngcontent-c10=""><i _ngcontent-c10="" class="ni ni-bell-55">
+                    </i><span _ngcontent-c10=""></span>
+                </div>
+            </div>
+            <div class="col-lg-10">
+                <span *ngIf="delete"> {{msmExitosoDelete}} </span>
+                <span *ngIf="!delete"> {{msmExitosoPut}} </span>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<div role="alert" id="notifiError" aria-live="assertive" aria-atomic="true" class="toast">
+    <div class="toast-header">
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Cerrar" (click)="cerrarToast()">
+            <span aria-hidden="true"></span>
+        </button>
+        <div class="row">
+            <div class="col-lg-1">
+                <div _ngcontent-c10=""><i _ngcontent-c10="" class="ni ni-bell-55">
+                    </i><span _ngcontent-c10=""></span>
+                </div>
+            </div>
+            <div class="col-lg-10">
+                <span *ngIf="delete">{{msmErrorDelete}}</span>
+                <span *ngIf="!delete">{{msmErrorPut}}</span>
+            </div>
+        </div>
+    </div>
+
+</div>

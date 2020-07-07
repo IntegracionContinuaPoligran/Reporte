@@ -1,12 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, Routes } from '@angular/router';
-
-//Servicios
-import { TokenStorageService } from 'src/app/services/token-storage.service';
+import { MenuModel } from 'src/app/models/menu.model';
 import { MenuService } from 'src/app/services/menu.service';
-
-//Modelos
-import { MenuModel } from '../../models/menu.model';
+import { TokenStorageService } from 'src/app/services/token-storage.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -18,16 +14,16 @@ export class SidebarComponent implements OnInit {
   private menu: MenuModel [] = [] ;
   public menuItems: any[];
   public isCollapsed = true;
-  public PROP: any[]; 
+  public PROP: any[];  
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private servicio: MenuService,
     private token: TokenStorageService) { }
 
   ngOnInit() {
     this.obtenerMenu(); 
   }
-
 
   sideBarCollapse(id: string) {
     this.menuItems.forEach((menu) => {
@@ -40,12 +36,10 @@ export class SidebarComponent implements OnInit {
 
   }
 
-   obtenerMenu() {
-     this.menu = this.token.obtenerMenu();    
+  obtenerMenu() {
+    this.menu= this.token.obtenerMenu();    
     this.menuItems = this.menu.filter(menuItem => menuItem);
     this.router.events.subscribe((event) => {
-    });
+    }); 
   }
-
-  
 }

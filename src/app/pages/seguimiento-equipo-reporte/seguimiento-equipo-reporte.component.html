@@ -1,0 +1,149 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-6">
+    <div class="container-fluid">
+    </div>
+</div>
+<div class="container-fluid mt--7 animated fadeIn fast">
+    <div class="container-fluid mt--7">
+        <!-- Table -->
+        <div class="row">
+            <div class="col">
+                <div class="card shadow">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h3 class="mb-0">{{titulopagina}}</h3>
+                            </div>
+                            <div class="col-4 text-right">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="row">                                
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Fecha Inicio</label>     
+                                        <div class="input-group">
+                                            <input 
+                                                class="form-control"
+                                                placeholder="yyyy-mm-dd"
+                                                ngbDatepicker #fi="ngbDatepicker"
+                                                name="fechaInicio"
+                                                [(ngModel)]="fehcaInicio">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary"
+                                                    (click)="fi.toggle()" 
+                                                     type="button"
+                                                    style="color: #8898aa; border: 1px solid #cad1d7;">
+                                                    <i class="ni ni-calendar-grid-58"></i>
+                                                </button>
+                                            </div>
+                                        </div>                                        
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Fecha Inicio</label>     
+                                        <div class="input-group">
+                                            <input 
+                                                class="form-control"
+                                                placeholder="yyyy-mm-dd"
+                                                ngbDatepicker #ff="ngbDatepicker"
+                                                name="fehcaFin"
+                                                [(ngModel)]="fehcaFin">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary"
+                                                    (click)="ff.toggle()" 
+                                                     type="button"
+                                                    style="color: #8898aa; border: 1px solid #cad1d7;">
+                                                    <i class="ni ni-calendar-grid-58"></i>
+                                                </button>
+                                            </div>
+                                        </div>                                        
+                                    </div>                          
+                                </div> 
+                                <div class="col-lg-3">
+                                    <button class="btn btn-sm btn-primary" style="top: 37%;" (click)="GenerarReporteDedicacionPorProyecto()">Consultar</button>                                    
+                                </div>
+                                <div class="col-3 text-right" *ngIf="ListModelo.length > 0">
+                                    <div class="text-center animated fadeIn faster mensajesAlerta" *ngIf="generandoArchivo">                                        
+                                        <p><i class="fas fa-spinner fa-pulse fa-2x"></i><p class="mb-0">
+                                            Generando Archivo
+                                        </p>
+                                    </div>
+
+                                    <button class="btn btn-sm btn-success" *ngIf="!generandoArchivo" style="top: 37%;" (click)="generarExcel()"> <i _ngcontent-c6="" class="ni ni-collection"></i> Exportar</button>                                    
+                                </div>
+                            </div>
+                        </form>                         
+                        <div class="table-responsive" *ngIf="!alerta">
+                            <div class="d-flex justify-content-between p-2" *ngIf="ListModelo.length > 0">
+                                <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
+                                </ngb-pagination>                      
+                                <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
+                                  <option [ngValue]="2">2 Registros por pagina</option>
+                                  <option [ngValue]="4">4 Registros por pagina</option>
+                                  <option [ngValue]="10">10 Registros por pagina</option>
+                                  <option [ngValue]="50">50 Registros por pagina</option>
+                                  <option [ngValue]="100">100 Registros por pagina</option>
+                                </select>
+                            </div>
+                            <table class="table align-items-center table-flush">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Proyecto</th>
+                                        <th scope="col">Actividad</th>
+                                        <th scope="col">Horas</th>
+                                        <th scope="col"> Fecha Registro</th>
+                                        <th scope="col">Estado</th>                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let registroFila of listDataTable">
+                                        <td>
+                                            {{ registroFila.nombreUsuario}} 
+                                        </td>
+                                        <td>
+                                            {{ registroFila.registroVenta}} ; 
+                                            {{ registroFila.proyecto.length > 20 ? registroFila.proyecto.substring(0,20) : registroFila.proyecto }}... 
+                                        </td>
+                                        <td>
+                                            {{ registroFila.actividad.length > 20 ? registroFila.actividad.substring(0,20) : registroFila.actividad }}...                                             
+                                        </td>
+                                        <td>
+                                            {{registroFila.horas.hora}} : {{registroFila.horas.minuto}}
+                                        </td>  
+                                        <td>
+                                            {{ formatearFecha(registroFila.fechaReporte)}}
+                                        </td>
+                                        <td>
+                                            {{registroFila.estadoNombre}}
+                                        </td>                                        
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-between p-2" *ngIf="ListModelo.length > 0">
+                                <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
+                                </ngb-pagination>                      
+                                <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
+                                  <option [ngValue]="2">2 Registros por pagina</option>
+                                  <option [ngValue]="4">4 Registros por pagina</option>
+                                  <option [ngValue]="10">10 Registros por pagina</option>
+                                  <option [ngValue]="50">50 Registros por pagina</option>
+                                  <option [ngValue]="100">100 Registros por pagina</option>
+                                </select>
+                            </div>
+                        </div>
+                        <app-alerta-no-data *ngIf="sinData"></app-alerta-no-data>
+                        <app-loader  *ngIf="cargando"></app-loader>
+                        <div *ngIf="alerta" class="alert alert-warning" role="alert">
+                            {{mensajeAlerta}}
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

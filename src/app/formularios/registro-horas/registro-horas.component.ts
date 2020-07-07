@@ -34,7 +34,7 @@ export class RegistroHorasComponent implements OnInit {
   public parametro2 = 'fechaDisponibleFin';
   public mensaje5 = 'Valide los registros del formulario.';
   public mensaje1 = 'Se presentó un error guardar la informacion';
-  public mensaje2 = 'Días disponibles para reportar, entre el ';
+  public mensaje2 = 'Días disponibles para reportar';
   public fechaInicio;
   public fechaFin;
 
@@ -104,8 +104,9 @@ export class RegistroHorasComponent implements OnInit {
   }
 
   validarRangoFecha() {
-    const fechaIngresada  = this.armarFecha();
-    return fechaIngresada < this.fechaFin &&  fechaIngresada > this.fechaInicio ? false : true;
+   // const fechaIngresada  = this.armarFecha();
+   // return fechaIngresada < this.fechaFin &&  fechaIngresada > this.fechaInicio ? false : true;
+   return false;
   }
 
   armarFechaFormateada(fecha) {

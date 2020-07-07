@@ -1,0 +1,173 @@
+
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-6">
+    <div class="container-fluid">
+    </div>
+</div>
+<div class="container-fluid mt--7 animated fadeIn fast">
+     <!-- Table -->
+    <div class="row" *ngIf="!detalle">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">{{titulopagina}}</h3>
+                        </div>                       
+                    </div>
+                </div>
+                <div class="card-body">
+                <div>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>                         
+                          <th scope="col">Nombre Usuario</th>
+                          <th scope="col"> Horas sin Calificar</th> 
+                          <th scope="col">Horas Aprobados</th> 
+                          <th scope="col">Horas Rechazados</th>
+                          <th scope="col">Total Horas</th>
+                          <th scope="col">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let registroFila of listModeloPorUsuario">
+                          <th scope="row">
+                              {{ registroFila.nombreUsuario}}
+                         </th>
+                          <td>
+                              {{ registroFila.cantidadRegistrados}}
+                         </td>  
+                          <td>
+                              {{ registroFila.cantidadAprobados}}
+                         </td>
+                         <td>
+                             {{ registroFila.cantidadRechazados}}
+                         </td> 
+                         <td>
+                             {{ registroFila.cantidadTotal}}
+                         </td>                
+                          <td>
+                            <button class="btn btn-sm btn-info" data-toggle="tooltip" data-placement="top" title="Ver Detalle" (click)="detalleRegistroHoras(registroFila.idUsuario, registroFila.nombreUsuario)">
+                                <i class="ni ni-archive-2"></i>
+                            </button>                           
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>
+                      
+                      <div class="d-flex justify-content-between p-2">
+                        <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
+                        </ngb-pagination>                      
+                        <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
+                          <option [ngValue]="2">2 Registros por pagina</option>
+                          <option [ngValue]="4">4 Registros por pagina</option>
+                          <option [ngValue]="10">10 Registros por pagina</option>
+                          <option [ngValue]="50">50 Registros por pagina</option>
+                          <option [ngValue]="100">100 Registros por pagina</option>
+                        </select>
+                      </div>
+                </div>              
+                <app-alerta-no-data *ngIf="sinData"></app-alerta-no-data>
+                <app-loader  *ngIf="cargando"></app-loader>
+            </div>
+        </div>
+    </div>
+     </div>
+    
+     <!-- Table detalle -->
+     <div class="row" *ngIf="detalle">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">{{titulopagina}}</h3>
+                        </div> 
+                        <div class="col-4 text-right">
+                         <button class="btn btn-sm btn-primary" (click)="detalle= false">Volver</button>
+                     </div>                      
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-8">                           
+                        </div>
+                        <div class="col-4 text-right">
+                            <div class="form-group mb-3">
+                                <div class="input-group input-group-alternative">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                    </div>
+                                    <input class="form-control"
+                                     placeholder="Buscar..."
+                                     type="text"
+                                     name="buscador"
+                                     [(ngModel)]="buscador"
+                                     (ngModelChange)="filtro()">                                 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <div>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>                         
+                          <th scope="col">Proyecto</th>
+                          <th scope="col"> Actividad</th> 
+                          <th scope="col">Horas</th> 
+                          <th scope="col">Fecha Registro</th>
+                          <th scope="col">Estado</th>                         
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let registroFila of listDataTable">
+                         <th scope="row">{{ registroFila.registroVenta}} ; 
+                             {{ registroFila.proyecto.length > 20 ? registroFila.proyecto.substring(0,20) : registroFila.proyecto }} 
+                             ...
+                         </th>
+                         <td>
+                             <div class="form-group">                
+                                 <textarea class="form-control"
+                                     name="comentario"                                                       
+                                     disabled="disabled"
+                                     rows="3">
+                                 {{registroFila.actividad}}
+                                 </textarea>
+                               </div>                            
+                         </td>  
+                         <td>
+                             {{registroFila.horas.hora}} : {{registroFila.horas.minuto}}
+                         </td>
+                         <td>
+                             {{ formatearFecha(registroFila.fechaReporte)}}
+                         </td>                                    
+                         <td>
+                             {{registroFila.estadoNombre}}
+                         </td>
+                        </tr>
+                        </tbody>
+                      </table>
+                      
+                      <div class="d-flex justify-content-between p-2">
+                        <ngb-pagination [collectionSize]="collectionSizeUsuario" [(page)]="page" [pageSize]="pageSize1">
+                        </ngb-pagination>
+    
+                        <select class="custom-select" style="width: auto" [(ngModel)]="pageSize1">
+                          <option [ngValue]="2">2 Registros por pagina</option>
+                          <option [ngValue]="4">4 Registros por pagina</option>
+                          <option [ngValue]="10">10 Registros por pagina</option>
+                          <option [ngValue]="50">50 Registros por pagina</option>
+                          <option [ngValue]="100">100 Registros por pagina</option>
+                        </select>
+                      </div>
+                </div>              
+                <app-alerta-no-data *ngIf="sinData"></app-alerta-no-data>
+                <app-loader  *ngIf="cargando"></app-loader>
+            </div>
+        </div>
+    </div>
+     </div>
+
+
+</div>
+
+
